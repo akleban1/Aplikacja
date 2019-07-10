@@ -2,7 +2,7 @@ package pl.sda.domain.repository.impl;
 
 import org.springframework.stereotype.Repository;
 import pl.sda.domain.Product;
-import pl.sda.domain.ProductRepository;
+import pl.sda.domain.repository.ProductRepository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

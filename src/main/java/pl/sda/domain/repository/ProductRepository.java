@@ -1,4 +1,6 @@
-package pl.sda.domain;
+package pl.sda.domain.repository;
+
+import pl.sda.domain.Product;
 
 import java.util.List;
 
