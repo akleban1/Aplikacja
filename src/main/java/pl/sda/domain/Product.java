@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,6 +28,8 @@ public class Product {
     private long unitsInOrder;
     private boolean discontinued;
     private String condition;
+
+    private MultipartFile productImage;
 
     public Product(String productId, String name, BigDecimal unitPrice) {
         this.productId = productId;
