@@ -4,29 +4,47 @@ package pl.sda.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.MatrixVariable;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pl.sda.domain.repository.ProductRepository;
+import org.springframework.web.bind.annotation.RequestParam;
+import pl.sda.service.ProductService;
 
-import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 @Controller
+@RequestMapping("/products")
 public class ProductController {
-//    @RequestMapping("/products")
-//    public String list(Model model) {
-//        Product iphone = new Product("P1234","iPhone 5s", new BigDecimal(500));
-//        iphone.setDescription("Apple iPhone 5s, smartfon z 4-calowym wyświetlaczem o rozdzielczości 6401136 oraz 8-megapikselowym aparatem");
-//                iphone.setCategory("Smart Phone");
-//        iphone.setManufacturer("Apple");
-//        iphone.setUnitsInStock(1000);
-//        model.addAttribute("product", iphone);
-//        return "products";
-//    }
-@Autowired
-private ProductRepository productRepository;
 
-    @RequestMapping("/products")
+    @Autowired
+    private ProductService productService;
+
+    @RequestMapping
     public String list(Model model) {
-        model.addAttribute("products", productRepository.getAllProducts());
+        model.addAttribute("products", productService.getAllProducts());
         return "products";
+    }
+
+    @RequestMapping("/all")
+    public String allProducts(Model model) {
+        model.addAttribute("products", productService.getAllProducts());
+        return "products";
+    }
+
+    @RequestMapping("/{category}")
+    public String getProductsByCategory(Model model, @PathVariable("category")String productCategory) {
+        model.addAttribute("products", productService.getProductsByCategory(productCategory));
+        return "products";
+    }
+    @RequestMapping("/filter/{ByCriteria}")
+    public String getProductsByFilter(@MatrixVariable(pathVar="ByCriteria") Map<String,List<String>> filterParams, Model model) {
+        model.addAttribute("products", productService.getProductsByFilter(filterParams));
+        return "products";
+    }
+    @RequestMapping("/product")
+    public String getProductById(@RequestParam("id") String productId, Model model) {
+        model.addAttribute("product", productService.getProductById(productId));
+        return "product";
     }
 }

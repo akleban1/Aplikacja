@@ -9,6 +9,11 @@ import pl.sda.service.OrderService;
 @Service
 public class OrderServiceImpl implements OrderService{
 
+    @Override
+    public void processOrder(String productId, int count) {
+
+    }
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -22,10 +27,6 @@ public class OrderServiceImpl implements OrderService{
         productById.setUnitsInStock(productById.getUnitsInStock() - quantity);
     }
 
-    @Override
-    public void processOrder(String productId, int count) {
-
-    }
 }
 
 
