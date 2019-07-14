@@ -3,6 +3,7 @@ package pl.sda.domain.repository.impl;
 import org.springframework.stereotype.Repository;
 import pl.sda.domain.Product;
 import pl.sda.domain.repository.ProductRepository;
+import pl.sda.exception.ProductNotFoundException;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -50,9 +51,8 @@ public class InMemoryProductRepository implements ProductRepository{
                 break;
             }
         }
-
-        if(productById == null){
-            throw new IllegalArgumentException("Brak produktu o wskazanym id: "+ productId);
+        if (productById == null){
+            throw new ProductNotFoundException(productId);
         }
         return productById;
     }
