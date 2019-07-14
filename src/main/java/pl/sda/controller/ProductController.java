@@ -11,6 +11,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.sda.domain.Product;
+import pl.sda.exception.NoProductsFoundUnderCategoryException;
 import pl.sda.service.ProductService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,8 +39,12 @@ public class ProductController {
     }
 
     @RequestMapping("/{category}")
-    public String getProductsByCategory(Model model, @PathVariable("category")String productCategory) {
-        model.addAttribute("products", productService.getProductsByCategory(productCategory));
+    public String getProductsByCategory(Model model, @PathVariable("category")String category) {
+        List<Product> products = productService.getProductsByCategory(category);
+        if (products == null || products.isEmpty()){
+            throw new NoProductsFoundUnderCategoryException();
+        }
+        model.addAttribute("products", products);
         return "products";
     }
     @RequestMapping("/filter/{ByCriteria}")
