@@ -84,4 +84,8 @@ public class ProductController {
         binder.setDisallowedFields("unitsInOrder", "discontinued");
         binder.setAllowedFields("productId", "name", "unitPrice", "description","manufacturer", "category", "unitsInStock", "productImage");
     }
+    @RequestMapping("/invalidPromoCode")
+    public String invalidPromoCode() {
+        return "invalidPromoCode";
+    }
 }

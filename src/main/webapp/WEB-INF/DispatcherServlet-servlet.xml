@@ -67,6 +67,11 @@
             <property name="paramName" value="language"/>
         </bean>
         <bean class= "pl.sda.interceptor.AuditingInterceptor"/>
+        <bean class="pl.sda.interceptor.PromoCodeInterceptor">
+            <property name="promoCode" value="OF3RTA"/>
+            <property name="errorRedirect" value="invalidPromoCode"/>
+            <property name="offerRedirect" value="products"/>
+        </bean>
     </mvc:interceptors>
 
 	<mvc:resources location="/resources/" mapping="/resource/**"/>
