@@ -9,11 +9,14 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Data
 @ToString
 @NoArgsConstructor
+@XmlRootElement
 public class Product {
     @Id
     @GeneratedValue
@@ -35,6 +38,10 @@ public class Product {
         this.productId = productId;
         this.name = name;
         this.unitPrice = unitPrice;
+    }
+    @XmlTransient
+    public MultipartFile getProductImage() {
+        return productImage;
     }
 
     @Override
