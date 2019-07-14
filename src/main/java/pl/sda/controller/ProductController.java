@@ -10,10 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import pl.sda.domain.Product;
-import pl.sda.exception.NoProductsFoundUnderCategoryException;
-import pl.sda.exception.ProductNotFoundException;
 import pl.sda.service.ProductService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,12 +38,8 @@ public class ProductController {
     }
 
     @RequestMapping("/{category}")
-    public String getProductsByCategory(Model model, @PathVariable("category")String category) {
-        List<Product> products = productService.getProductsByCategory(category);
-        if (products == null || products.isEmpty()){
-            throw new NoProductsFoundUnderCategoryException();
-        }
-        model.addAttribute("products", products);
+    public String getProductsByCategory(Model model, @PathVariable("category")String productCategory) {
+        model.addAttribute("products", productService.getProductsByCategory(productCategory));
         return "products";
     }
     @RequestMapping("/filter/{ByCriteria}")
@@ -80,7 +73,7 @@ public class ProductController {
             try {
                 productImage.transferTo(new File(rootDirectory+"resources\\images\\"+productToBeAdded.getProductId() + ".png"));
             } catch (Exception e) {
-                throw new RuntimeException("Niepowodzenie podczas próby zapisu obrazka", e);
+                throw new RuntimeException("Próba zapisu obrazka zakoczona niepowodzeniem", e);
             }
         }
         productService.addProduct(productToBeAdded);
@@ -89,15 +82,6 @@ public class ProductController {
     @InitBinder
     public void initialiseBinder(WebDataBinder binder) {
         binder.setDisallowedFields("unitsInOrder", "discontinued");
-        binder.setAllowedFields("productId", "name", "unitPrice", "description","manufacturer", "category", "unitsInStock", "productImage","language");
-    }
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ModelAndView handleError(HttpServletRequest req, ProductNotFoundException exception) {
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("invalidProductId", exception.getProductId());
-        mav.addObject("exception", exception);
-        mav.addObject("url", req.getRequestURL()+"?"+req.getQueryString());
-        mav.setViewName("productNotFound");
-        return mav;
+        binder.setAllowedFields("productId", "name", "unitPrice", "description","manufacturer", "category", "unitsInStock", "productImage");
     }
 }
