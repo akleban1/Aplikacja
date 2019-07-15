@@ -82,7 +82,7 @@ public class ProductController {
     @InitBinder
     public void initialiseBinder(WebDataBinder binder) {
         binder.setDisallowedFields("unitsInOrder", "discontinued");
-        binder.setAllowedFields("productId", "name", "unitPrice", "description","manufacturer", "category", "unitsInStock", "productImage");
+        binder.setAllowedFields("productId", "name", "unitPrice", "description","manufacturer", "category", "unitsInStock", "productImage", "language");
     }
     @RequestMapping("/invalidPromoCode")
     public String invalidPromoCode() {
