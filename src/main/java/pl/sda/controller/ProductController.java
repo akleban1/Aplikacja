@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.sda.domain.Product;
 import pl.sda.service.ProductService;
+import pl.sda.validator.ProductValidator;
+import pl.sda.validator.UnitsInStockValidator;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +27,9 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ProductValidator productValidator;
 
     @RequestMapping
     public String list(Model model) {
@@ -59,21 +65,21 @@ public class ProductController {
         return "addProduct";
     }
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String processAddNewProductForm(@ModelAttribute("newProduct") Product productToBeAdded, ModelMap map, BindingResult result, HttpServletRequest request) {
+    public String processAddNewProductForm(@ModelAttribute("newProduct") @Valid Product productToBeAdded, BindingResult result, HttpServletRequest request) {
+        if(result.hasErrors()) {
+            return "addProduct";
+        }
         String[] suppressedFields = result.getSuppressedFields();
-
         if (suppressedFields.length > 0) {
             throw new RuntimeException("Próba wiązania niedozwolonych pól: " + StringUtils.arrayToCommaDelimitedString(suppressedFields));
         }
-
         MultipartFile productImage = productToBeAdded.getProductImage();
         String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-
         if (productImage!=null && !productImage.isEmpty()) {
             try {
                 productImage.transferTo(new File(rootDirectory+"resources\\images\\"+productToBeAdded.getProductId() + ".png"));
             } catch (Exception e) {
-                throw new RuntimeException("Próba zapisu obrazka zakoczona niepowodzeniem", e);
+                throw new RuntimeException("Próba zapisu obrazka zakończona niepowodzeniem", e);
             }
         }
         productService.addProduct(productToBeAdded);
@@ -83,6 +89,7 @@ public class ProductController {
     public void initialiseBinder(WebDataBinder binder) {
         binder.setDisallowedFields("unitsInOrder", "discontinued");
         binder.setAllowedFields("productId", "name", "unitPrice", "description","manufacturer", "category", "unitsInStock", "productImage", "language");
+        binder.setValidator(productValidator);
     }
     @RequestMapping("/invalidPromoCode")
     public String invalidPromoCode() {
