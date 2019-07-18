@@ -3,11 +3,13 @@ package pl.sda.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
-public class CartItem {
+public class CartItem implements Serializable {
+    private static final long serialVersionUID = -4314427089896169685L;
     private Product product;
     private int quantity;
     private BigDecimal totalPrice;

@@ -1,5 +1,6 @@
 package pl.sda.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import lombok.Data;
@@ -24,7 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @ToString
 @NoArgsConstructor
 @XmlRootElement
-public class Product {
+public class Product implements Serializable {
     @Id
     @GeneratedValue
 
@@ -46,6 +47,7 @@ public class Product {
     private String condition;
 
     private MultipartFile productImage;
+    private static final long serialVersionUID = 3678107792576131001L;
 
     public Product(String productId, String name, BigDecimal unitPrice) {
         this.productId = productId;
